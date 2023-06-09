@@ -1,0 +1,104 @@
+-<!DOCTYPE html>
+<html>
+<head>
+  <style>
+  
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      width: 600px;
+      height: 300px;
+      border: 2px dashed #ccc;
+      padding: 20px;
+      margin-bottom: 20px;
+      background-color: #fff;
+    }
+
+    .container img {
+      width: 100px;
+      height: 100px;
+      margin: 10px;
+      border: 2px solid #ccc;
+      cursor: move;
+    }
+
+    .success {
+      color: green;
+      font-weight: bold;
+    }
+
+    .reset-button {
+      display: inline-block;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 4px;
+      background-color: #4caf50;
+      color: #fff;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>IMAGES</h1>
+
+  <div class="container" id="container1">
+    <img src="https://tinyurl.com/dkxknyfv" draggable="true">
+    <img src="https://tinyurl.com/dkxknyfv" draggable="true">
+    <img src="https://www.talkwalker.com/images/2020/blog-headers/image-analysis.png" draggable="true">
+    <img src="https://images.unsplash.com/photo-1484503369601-c5f45a1bf914?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" draggable="true">
+  </div>
+
+  <div class="container" id="container2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+
+  <p id="successMessage"></p>
+
+  <button class="reset-button" onclick="reset()">Reset</button>
+
+  <script>
+    function allowDrop(event) {
+      event.preventDefault();
+    }
+
+    function drop(event) {
+      event.preventDefault();
+      var data = event.dataTransfer.getData("text/html");
+      event.target.insertAdjacentHTML('beforeend', data);
+
+      // Check if the drop was successful
+      if (event.target.id === 'container2') {
+        document.getElementById('successMessage').innerText = 'Image successfully dropped!';
+      }
+    }
+
+    function reset() {
+      var container1 = document.getElementById('container1');
+      var container2 = document.getElementById('container2');
+      container2.innerHTML = '';
+      container2.style.border = '2px dashed #ccc';
+      document.getElementById('successMessage').innerText = '';
+
+      // Restore the images in container1
+      var images = container1.querySelectorAll('img');
+      for (var i = 0; i < images.length; i++) {
+        container1.appendChild(images[i]);
+      }
+    }
+
+    
+    var images = document.querySelectorAll('img');
+    for (var i = 0; i < images.length; i++) {
+      images[i].addEventListener('dragstart', function(event) {
+        event.dataTransfer.setData('text/html', this.outerHTML);
+        this.style.opacity = '0.6';
+      });
+
+      images[i].addEventListener('dragend', function(event) {
+        this.style.opacity = '1';
+      });
+    }
+  </script>
+</body>
+</html>
